@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 public class Battle : IBattleable
 {
     [field: SerializeField]
-    public Monster[] Monsters {get; set; }
+    public ProtoBattler[] ProtoBattlers {get; set; }
     [field: SerializeField]
     public Sprite Background {get; set; }
     [field: SerializeField]
     public int MoneyReward {get; set; }
 
-    public Battle(Monster[] monsters, Sprite background, int moneyReward)
+    public Battle(ProtoBattler[] protoBattlers, Sprite background, int moneyReward)
     {
-        Monsters = monsters;
+        ProtoBattlers = protoBattlers;
         Background = background;
         MoneyReward = moneyReward;
     }

@@ -7,7 +7,7 @@ public class BattleSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Log("battle system starting");
     }
 
     // Update is called once per frame

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f53a2a9e0c5cb4143a3d2b576c4e08c0, type: 3}
+  m_Name: Farmer
+  m_EditorClassIdentifier: 
+  <StatsCore>k__BackingField:
+    <Agility>k__BackingField: 3
+    <Brawn>k__BackingField: 3
+    <Courage>k__BackingField: 3
+  <StatsGrowth>k__BackingField:
+    <Agility>k__BackingField: 1
+    <Brawn>k__BackingField: 1
+    <Courage>k__BackingField: 1
+  <CreatureTypes>k__BackingField:
+  - {fileID: 11400000, guid: 9c796e312af93664ebee420da5bb0e17, type: 2}
+  <ResistancesCore>k__BackingField:
+    <Earth>k__BackingField: 0
+    <Fire>k__BackingField: 0
+    <Wind>k__BackingField: 0
+    <Water>k__BackingField: 0
+  <IdleAnimation>k__BackingField: {fileID: 0}
+  <GearCore>k__BackingField:
+    <MainHand>k__BackingField: {fileID: 0}
+    <OffHand>k__BackingField: {fileID: 0}
+    <BodyArmor>k__BackingField: {fileID: 0}
+    <AccessoryA>k__BackingField: {fileID: 0}
+    <AccessoryB>k__BackingField: {fileID: 0}

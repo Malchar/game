@@ -12,9 +12,15 @@ public class Battler : MonoBehaviour
     public StatusCondition[] StatusConditions {get; set; }
     public int Initiative {get; set; }
 
+    // graphics
+    public SpriteRenderer SpriteRenderer {get; set; }
+    public Animator Animator {get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
+        SpriteRenderer = GetComponent<SpriteRenderer>();
+        Animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
