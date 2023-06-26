@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Battler : MonoBehaviour
@@ -26,5 +27,18 @@ public class Battler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    // battle utilities
+    public Move[] GetMoves() {
+        int level = ProtoBattler.Level;
+        LearnableMove[] learnableMoves = ProtoBattler.BattlerTemplate.LearnableMoves;
+        List<Move> moves = new();
+        foreach(LearnableMove learnableMove in learnableMoves) {
+            if (learnableMove.LevelRequirement <= level) {
+                moves.Add(learnableMove.Move);
+            }
+        }
+        return moves.ToArray();
     }
 }
