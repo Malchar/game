@@ -31,5 +31,16 @@ public class Stats
         return new Stats(scaler * stats.Agility, scaler * stats.Brawn, scaler * stats.Courage);
     }
 
+    private static int LevellerFunction(int core, int level, int growth){
+        return core + level * growth;
+    }
+
+    public static Stats LevelledStats(Stats core, int level, Stats growth) {
+        return new Stats(
+            LevellerFunction(core.Agility, level, growth.Agility),
+            LevellerFunction(core.Brawn, level, growth.Brawn),
+            LevellerFunction(core.Courage, level, growth.Courage)
+        );
+    }
 
 }

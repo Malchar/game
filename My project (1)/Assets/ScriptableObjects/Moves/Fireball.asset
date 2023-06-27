@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e363844af97f0b84c86849e447d86233, type: 3}
+  m_Name: Fireball
+  m_EditorClassIdentifier: 
+  Description: 
+  <NumTargets>k__BackingField: 0
+  <Damage>k__BackingField:
+    <PowerSource>k__BackingField: 2
+    <ElementVector>k__BackingField:
+      <Blunt>k__BackingField: 1
+      <Pierce>k__BackingField: 0
+      <Slash>k__BackingField: 0
+      <Tech>k__BackingField: 0
+      <Earth>k__BackingField: 0
+      <Fire>k__BackingField: 1
+      <Wind>k__BackingField: 0
+      <Water>k__BackingField: 0
+      <Spirit>k__BackingField: 0
+      <Bio>k__BackingField: 0
+      <Electric>k__BackingField: 0
+      <Psychic>k__BackingField: 0
+      <Ice>k__BackingField: 0
+      <Dark>k__BackingField: 0
+  PlaceholderStatusEffects: 

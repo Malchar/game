@@ -41,4 +41,35 @@ public class Battler : MonoBehaviour
         }
         return moves.ToArray();
     }
+
+    public Stats GetStats() {
+        Stats core = ProtoBattler.BattlerTemplate.StatsCore;
+        int level = ProtoBattler.Level;
+        Stats growth = ProtoBattler.BattlerTemplate.StatsGrowth;
+        return Stats.LevelledStats(core, level, growth);
+    }
+
+    public ElementVector GetArmor() {
+        // TODO: this does not account for temp changes during battle (riposte)
+        return ProtoBattler.GetGear().GetTotalArmor();
+    }
+
+    public ElementVector GetResistances() {
+        // TODO: this does not account for temp changes during battle (curses)
+        return ProtoBattler.GetTotalResistances();
+    }
+
+    // this applies damage to HP
+    public void TakeDamage(int damage) {
+        HP -= damage;
+        HP = CombatTools.BoundValue(0, HP, GetMaxHP());
+
+        if (HP == 0) {
+            // TODO
+        }
+    }
+
+    public int GetMaxHP() {
+        return 25;
+    }
 }

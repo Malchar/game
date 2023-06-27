@@ -19,4 +19,13 @@ public class GearSet
     public Accessory AccessoryB {get; set; }
 
     // TODO: methods for equipping/removing items, and validating hand types
+    public ElementVector GetTotalArmor() {
+        ElementVector armor = new();
+        armor.Append(MainHand.ArmorValue);
+        if (OffHand != null) armor.Append(OffHand.ArmorValue);
+        armor.Append(BodyArmor.ArmorValue);
+        armor.Append(AccessoryA.ArmorValue);
+        armor.Append(AccessoryB.ArmorValue);
+        return armor;
+    }
 }

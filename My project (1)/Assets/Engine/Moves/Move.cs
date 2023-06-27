@@ -5,7 +5,14 @@ using UnityEngine.Networking;
 
 public abstract class Move : ScriptableObject, IInvocable, ISelectable
 {
-    public abstract string GetDescription();
-    public abstract string GetName();
+    [field: SerializeField]
+    public string Description;
+    public string GetDescription()
+    {
+        return Description;
+    }
+    public string GetName(){
+        return this.name;
+    }
     public abstract void Invoke(Battler user, Battler[] targets);
 }

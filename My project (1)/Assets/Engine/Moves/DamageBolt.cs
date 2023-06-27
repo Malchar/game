@@ -8,27 +8,21 @@ using UnityEngine;
 public class DamageBolt : Move
 {
     [field: SerializeField]
-    public string Name {get; set; }
-    [field: SerializeField]
-    public string Description {get; set; }
-    [field: SerializeField]
-    public ElementVector Damage {get; set; }
-    [field: SerializeField]
     public int NumTargets {get; set; }
+    [field: SerializeField]
+    public PoweredElement Damage {get; set; }
     [field: SerializeField]
     public string PlaceholderStatusEffects;
 
-    public override string GetName()
-    {
-        return Name;
-    }
-    public override string GetDescription()
-    {
-        return Description;
-    }
-
     public override void Invoke(Battler user, Battler[] targets)
     {
-        throw new NotImplementedException();
+        // should be asynch
+        // draw animation
+        // apply damage
+        CombatTools.DealDamage(user, Damage, targets[0]);
+
+        // write to combat logs
+        // close animations
+        // return
     }
 }

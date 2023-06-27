@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "new Armament", menuName = "ScriptableObjects/Items/Armament", order = 1)]
-public class Armament : Item
+public class Armament : Equipment
 {
     [field: SerializeField]
     public HandType HandType {get; set; }
     [field: SerializeField]
     public bool IsWeapon {get; set; }
+
 }
