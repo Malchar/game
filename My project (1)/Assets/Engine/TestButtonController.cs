@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,21 +11,24 @@ public class TestButtonController : MonoBehaviour
     public Button attackButton;
     public Button damageButton;
     public GameObject characterToAnimate;
-    public bool IsMoving = false;
+    private bool IsMoving = false;
 
     // stage 2
     public Button buttonConfirm;
-    public Dropdown dropdownMoves;
+    //public ScrollView scrollView;
+    public FillScrollView scrollViewController;
     public GameObject enemyCharacter;
-    public Battler battlerFriendly;
-    public Battler battlerEnemy;
+    private Battler battlerFriendly;
+    private Battler battlerEnemy;
 
     [Header("Game Objects")]
     private Animator animatorFriendly;
     private Animator animatorEnemy;
     private void FindGameObjects(){
+        // TODO -- change these to be like the scrollViewController
         animatorFriendly = characterToAnimate.GetComponent<Animator>();
         animatorEnemy = enemyCharacter.GetComponent<Animator>();
+        //scrollViewController = scrollView.GetComponent<FillScrollView>;
 
         battlerFriendly = characterToAnimate.GetComponent<Battler>();
         battlerEnemy = enemyCharacter.GetComponent<Battler>();
@@ -50,6 +54,16 @@ public class TestButtonController : MonoBehaviour
         damageButton.onClick.AddListener(TakeDamage);
 
         buttonConfirm.onClick.AddListener(Confirm);
+        
+        // fill scrollview
+        DamageBolt fireBolt = new();
+        fireBolt.name = "Fire Bolt";
+        DamageBolt frostBolt = new();
+        frostBolt.name = "Frost Bolt";
+        DamageBolt lightningBolt = new();
+        lightningBolt.name = "Lightning Bolt";
+        Move[] moves = {fireBolt, frostBolt, fireBolt, lightningBolt};
+        scrollViewController.SetContent(moves);
     }
 
     // Update is called once per frame
@@ -61,20 +75,21 @@ public class TestButtonController : MonoBehaviour
     public void Move() {
         IsMoving = !IsMoving;
         animatorFriendly.SetBool("IsMoving", IsMoving);
+        Debug.Log("clicked move");
     }
 
     public void Attack() {
         animatorFriendly.Play("Attack");
+        Debug.Log("clicked attack");
     }
 
     public void TakeDamage() {
         animatorFriendly.Play("TakeDamage");
+        Debug.Log("clicked take damage");
     }
 
     public void Confirm() {
-        int indexSelected = dropdownMoves.value;
-        Move moveSelected = battlerFriendly.GetMoves()[indexSelected];
-        Debug.Log("index " + indexSelected + ", move " + moveSelected.GetName());
+        Debug.Log("move ...");
     }
 
 
