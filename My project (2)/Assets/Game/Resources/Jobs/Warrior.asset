@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2046edefeaaf0b42b85dc452b3015fe, type: 3}
+  m_Name: Warrior
+  m_EditorClassIdentifier: 
+  description: warrior job description here
+  animatorOverrideController: {fileID: 22100000, guid: 986244f27016f664d9144a3f47457621, type: 2}
+  type1: 0
+  type2: 0
+  agility: 10
+  brawn: 10
+  courage: 10
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: aca807947f0ed55429050fa34423e523, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 56034b90f936bef4fa09193b0d8eacb4, type: 2}
+    level: 2
+  - moveBase: {fileID: 11400000, guid: a9f7b15ab0a0dd248a0e1618a131dea8, type: 2}
+    level: 3
