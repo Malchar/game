@@ -1,31 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PartyMember
 {
-    JobBase jobBase;
-    int level;
+    public JobBase JobBase { get; set; }
+    public int Level { get; set; }
     public int HP { get; set; }
     public List<MoveBase> Moves { get; set; }
+    public string Name { get; set; }
 
-    public PartyMember(JobBase jobBase, int level) {
-        this.jobBase = jobBase;
-        this.level = level;
+    public int GetMaxHP(){
+        return JobBase.Brawn * 2;
+    }
+
+    public PartyMember(JobBase jobBase, int level, string name) {
+        JobBase = jobBase;
+        Level = level;
+        Name = name;
 
         // initialize HP
-        this.HP = Brawn * 2;
+        HP = GetMaxHP();
 
-        // add moves based on level
-        Moves = new List<MoveBase>();
-        foreach(var move in jobBase.LearnableMoves) {
-            if (move.Level <= level) {
-                Moves.Add(move.MoveBase);
-            }
-        }
+        // initialize moves
+        SetMoves();
     }
 
     public int Brawn {
-        get { return jobBase.Brawn + 1 * (level - 1); }
+        get { return JobBase.Brawn + 1 * (Level - 1); }
+    }
+
+    private void SetMoves(){
+         // add moves based on level
+        Moves = new List<MoveBase>();
+        foreach(var move in JobBase.LearnableMoves) {
+            if (move.Level <= Level) {
+                Moves.Add(move.MoveBase);
+            }
+        }
     }
 }

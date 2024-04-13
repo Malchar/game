@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Job", menuName = "Job/Create new job")]
 public class JobBase : ScriptableObject
@@ -12,6 +13,8 @@ public class JobBase : ScriptableObject
 
     [SerializeField] CreatureType type1;
     [SerializeField] CreatureType type2;
+    [SerializeField] Sprite frontSprite;
+    [SerializeField] Sprite backSprite;
 
     // base stats
     [SerializeField] int agility;
@@ -48,6 +51,8 @@ public class JobBase : ScriptableObject
         get { return learnableMoves; }
     }
 
+    public Sprite FrontSprite { get => frontSprite; set => frontSprite = value; }
+    public Sprite BackSprite { get => backSprite; set => backSprite = value; }
 }
 
 [System.Serializable]
