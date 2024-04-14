@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: fireball description
   power: 15
-  element: 0
+  element: 1

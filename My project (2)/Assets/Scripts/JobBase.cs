@@ -74,3 +74,20 @@ public enum CreatureType {
     Undead,
     Other
 }
+
+public class TypeChart {
+    static float[][] chart = {// human  beast  bird  undead  other
+        /* earth */new float[] {    1f,  0.5f,   2f,     1f,    1f},
+        /* fire  */new float[] {    2f,    2f,   1f,     2f,    1f},
+        /* wind  */new float[] {    1f,    1f, 0.5f,     1f,    1f},
+        /* water */new float[] {  0.5f,    2f,   1f,     1f,    1f},
+        /* heart */new float[] {  0.5f,    1f,   1f,     2f,    1f}
+    };
+
+    public static float GetEffectiveness(ElementType attacker, CreatureType defender){
+        int row = (int)attacker;
+        int col = (int)defender;
+        return chart[row][col];
+    }
+}
+

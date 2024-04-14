@@ -15,14 +15,16 @@ MonoBehaviour:
   description: cleric job description here
   animatorOverrideController: {fileID: 22100000, guid: 643cfbc7f97c0af4f9a3615a5a2c27ac, type: 2}
   type1: 0
-  type2: 0
+  type2: 4
+  frontSprite: {fileID: 1089529197, guid: 53ca0cb7bbbb5b544958737bd98891b1, type: 3}
+  backSprite: {fileID: 1776315233, guid: 53ca0cb7bbbb5b544958737bd98891b1, type: 3}
   agility: 8
   brawn: 10
   courage: 12
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: b726ea1bd6fe2ea49a3e8f8c995b9d13, type: 2}
     level: 1
-  - moveBase: {fileID: 11400000, guid: a9f7b15ab0a0dd248a0e1618a131dea8, type: 2}
+  - moveBase: {fileID: 11400000, guid: 681d9376347f1054689a9afaa7024fdb, type: 2}
     level: 2
   - moveBase: {fileID: 11400000, guid: 8f50a928742601c44bb0c438660f70c1, type: 2}
     level: 3

@@ -15,7 +15,9 @@ MonoBehaviour:
   description: warrior job description here
   animatorOverrideController: {fileID: 22100000, guid: 986244f27016f664d9144a3f47457621, type: 2}
   type1: 0
-  type2: 0
+  type2: 4
+  frontSprite: {fileID: -1169092440, guid: 6158ed33f332aa64892bd0c477b313ca, type: 3}
+  backSprite: {fileID: -430000701, guid: 6158ed33f332aa64892bd0c477b313ca, type: 3}
   agility: 10
   brawn: 10
   courage: 10

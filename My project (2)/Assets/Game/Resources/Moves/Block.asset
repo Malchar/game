@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c73f85eeeb21945a97033428452e66, type: 3}
   m_Name: Block
   m_EditorClassIdentifier: 
-  description: 
+  description: block description
   power: 5
-  element: 0
+  element: 4
