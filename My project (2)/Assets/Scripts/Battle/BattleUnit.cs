@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour
 {
-    [SerializeField] PartyMember partyMember;
-    [SerializeField] int level;
     [SerializeField] bool isPlayerUnit;
 
     Image image;
@@ -20,16 +18,19 @@ public class BattleUnit : MonoBehaviour
         originalColor = image.color;
     }
 
-    public PartyMember PartyMember { get => partyMember; set => partyMember = value; }
+    public PartyMember PartyMember { get; set; }
 
-    public void Setup(PartyMember inPartyMember){
-        partyMember = inPartyMember;
+    public void Setup(PartyMember partyMember){
+        PartyMember = partyMember;
         if (isPlayerUnit) {
             image.sprite = PartyMember.JobBase.BackSprite;
         }
         else {
             image.sprite = PartyMember.JobBase.FrontSprite;
         }
+
+        // reverts any changes since previous battle
+        image.color = originalColor;
 
         PlayEnterAnimation();
     }

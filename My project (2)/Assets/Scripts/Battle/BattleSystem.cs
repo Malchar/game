@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,16 +30,22 @@ public class BattleSystem : MonoBehaviour
     int currentAction;
     int currentMove;
 
+    public event Action<bool> OnBattleOver;
 
-    private void Start(){
+    Party playerParty;
+    PartyMember enemy;
+
+    public void StartBattle(Party playerParty, PartyMember enemy){
+        this.playerParty = playerParty;
+        this.enemy = enemy;
         StartCoroutine(SetupBattle());
     }
 
     public IEnumerator SetupBattle(){
-        playerUnit.Setup(new PartyMember(testJobBase, testLevel, testName));
+        playerUnit.Setup(playerParty.GetHealthyMember());
         playerHud.SetData(playerUnit.PartyMember);
 
-        enemyUnit.Setup(new PartyMember(testEnemyJobBase, testEnemyLevel, testEnemyName));
+        enemyUnit.Setup(enemy);
         enemyHud.SetData(enemyUnit.PartyMember);
 
         dialogBox.SetMoveNames(playerUnit.PartyMember.Moves);
@@ -78,6 +85,10 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted){
             enemyUnit.PlayFaintAnimation();
             yield return dialogBox.TypeDialog($"{enemyUnit.PartyMember.Name} fainted");
+
+            // player won the battle
+            yield return new WaitForSeconds(2f);
+            OnBattleOver(true);
         } else {
             StartCoroutine(EnemyMove());
         }
@@ -101,6 +112,22 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted){
             playerUnit.PlayFaintAnimation();
             yield return dialogBox.TypeDialog($"{playerUnit.PartyMember.Name} fainted");
+
+            
+            yield return new WaitForSeconds(2f);
+
+            var nextMember = playerParty.GetHealthyMember();
+            if (nextMember != null){
+                playerUnit.Setup(nextMember);
+                playerHud.SetData(playerUnit.PartyMember);
+                dialogBox.SetMoveNames(playerUnit.PartyMember.Moves);
+                yield return dialogBox.TypeDialog($"Go {playerUnit.PartyMember.Name}!");
+                PlayerAction();
+            } else {
+                // player lost the battle
+                OnBattleOver(false);
+            }
+            
         } else {
             PlayerAction();
         }
@@ -118,7 +145,7 @@ public class BattleSystem : MonoBehaviour
 
     }
 
-    private void Update(){
+    public void HandleUpdate(){
         if (state == BattleState.PlayerAction) {
             HandleActionSelection();
         } else if (state == BattleState.PlayerMove) {
