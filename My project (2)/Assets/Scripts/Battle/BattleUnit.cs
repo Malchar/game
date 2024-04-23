@@ -7,6 +7,10 @@ using DG.Tweening;
 public class BattleUnit : MonoBehaviour
 {
     [SerializeField] bool isPlayerUnit;
+    public bool IsPlayerUnit { get { return isPlayerUnit; } }
+
+    [SerializeField] BattleHud hud;
+    public BattleHud Hud { get { return hud; } }
 
     Image image;
     Vector3 originalPos;
@@ -28,6 +32,9 @@ public class BattleUnit : MonoBehaviour
         else {
             image.sprite = PartyMember.JobBase.FrontSprite;
         }
+
+        // hud
+        hud.SetData(partyMember);
 
         // reverts any changes since previous battle
         image.color = originalColor;

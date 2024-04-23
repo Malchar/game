@@ -22,14 +22,5 @@ MonoBehaviour:
   brawn: 10
   courage: 12
   learnableMoves:
-  - moveBase: {fileID: 11400000, guid: b726ea1bd6fe2ea49a3e8f8c995b9d13, type: 2}
-    level: 1
-  - moveBase: {fileID: 11400000, guid: 681d9376347f1054689a9afaa7024fdb, type: 2}
-    level: 2
-  - moveBase: {fileID: 11400000, guid: 8f50a928742601c44bb0c438660f70c1, type: 2}
-    level: 3
-  learnableMoves2:
-  - moveBase: {fileID: 0}
-    level: 0
-  - moveBase: {fileID: 0}
-    level: 0
+  - level: 0
+  - level: 0

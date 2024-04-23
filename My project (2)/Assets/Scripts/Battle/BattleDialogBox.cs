@@ -53,17 +53,17 @@ public class BattleDialogBox : MonoBehaviour
         }
     }
 
-    public void SetMoveNames(List<MoveBase> moves){
+    public void SetMoveNames(List<IMove> moves){
         for (int i = 0; i < moveTexts.Count; ++i) {
             if (i < moves.Count){
-                moveTexts[i].text = moves[i].name;
+                moveTexts[i].text = moves[i].Name;
             } else {
                 moveTexts[i].text = "";
             }
         }
     }
 
-    public void UpdateMoveSelection(int selectedMove, MoveBase move){
+    public void UpdateMoveSelection(int selectedMove, IMove move){
         for (int i=0; i < moveTexts.Count; ++i){
             if (i == selectedMove){
                 moveTexts[i].color = highlightedColor;
@@ -73,6 +73,6 @@ public class BattleDialogBox : MonoBehaviour
         }
 
         ppText.text = $"PP {move.Description}";
-        typeText.text = move.Element.ToString();
+        typeText.text = "redacted"; //move.Element.ToString();
     }
 }

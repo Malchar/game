@@ -681,12 +681,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerUnit: {fileID: 2062522298}
-  playerHud: {fileID: 1040899230}
   testJobBase: {fileID: 11400000, guid: 4808f4781c5cbaf498401900dde2a262, type: 2}
   testLevel: 3
   testName: James
   enemyUnit: {fileID: 979634735}
-  enemyHud: {fileID: 1752940302}
   testEnemyJobBase: {fileID: 11400000, guid: 959043ab10f24ce4aae34cba643dc975, type: 2}
   testEnemyLevel: 2
   testEnemyName: Evil Warrior
@@ -1852,6 +1850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerUnit: 0
+  hud: {fileID: 1752940302}
 --- !u!1 &996908377
 GameObject:
   m_ObjectHideFlags: 0
@@ -8943,6 +8942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerUnit: 1
+  hud: {fileID: 1040899230}
 --- !u!1 &2141316005
 GameObject:
   m_ObjectHideFlags: 0

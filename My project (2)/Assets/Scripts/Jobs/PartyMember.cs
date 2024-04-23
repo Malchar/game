@@ -17,7 +17,7 @@ public class PartyMember
     }}
 
     public int HP { get; set; }
-    public List<MoveBase> Moves { get; set; }
+    public List<IMove> Moves { get; set; }
     public string Name { get; set; }
 
     public int GetMaxHP(){
@@ -39,18 +39,20 @@ public class PartyMember
 
     private void SetMoves(){
          // add moves based on level
-        Moves = new List<MoveBase>();
-        foreach(var move in JobBase.LearnableMoves) {
-            if (move.Level <= Level) {
-                Moves.Add(move.MoveBase);
+        Moves = new List<IMove>();
+        foreach(var learnableMove in JobBase.LearnableMoves) {
+            if (learnableMove.Level <= Level) {
+                Moves.Add(learnableMove.Move);
             }
         }
     }
 
-    public DamageDetails TakeDamage(MoveBase move, PartyMember attacker){
-        float type1 = TypeChart.GetEffectiveness(move.Element, JobBase.Type1);
-        float type2 = TypeChart.GetEffectiveness(move.Element, JobBase.Type2);
-
+    public DamageDetails TakeDamage(IMove move, PartyMember attacker){
+        // float type1 = TypeChart.GetEffectiveness(move.Element, JobBase.Type1);
+        // float type2 = TypeChart.GetEffectiveness(move.Element, JobBase.Type2);
+        float type1 = 1.0f;
+        float type2 = 1.0f;
+        
         float critical = 1f;
         if (UnityEngine.Random.value * 100f <= 6.25f) {
             critical = 2f;
@@ -64,7 +66,8 @@ public class PartyMember
 
         float modifiers = UnityEngine.Random.Range(0.85f, 1f) * type1 * type2 * critical;
         float a = (2 * attacker.Level + 10) / 250f;
-        float d = a * move.Power * ((float)attacker.Brawn / Brawn) + 2;
+        float d = a;
+        // float d = a * move.Dam * ((float)attacker.Brawn / Brawn) + 2;
         int damage = Mathf.FloorToInt(d * modifiers);
 
         HP -= damage;
@@ -76,7 +79,7 @@ public class PartyMember
         return damageDetails;
     }
 
-    public MoveBase GetRandomMove(){
+    public IMove GetRandomMove(){
         int r = UnityEngine.Random.Range(0, Moves.Count);
         return Moves[r];
     }

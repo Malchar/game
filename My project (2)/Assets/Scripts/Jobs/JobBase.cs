@@ -22,7 +22,9 @@ public class JobBase : ScriptableObject
     [SerializeField] int courage;
 
     [SerializeField] List<LearnableMove> learnableMoves;
-    [SerializeField] List<LearnableMove> learnableMoves2;
+
+    [SerializeReference] IMove favoriteMove;
+    public IMove FavoriteMove { get { return favoriteMove; }}
 
     public string Description {
         get { return description; }
@@ -52,28 +54,17 @@ public class JobBase : ScriptableObject
         get { return learnableMoves; }
     }
 
-    public List<LearnableMove> LearnableMoves2 {
-        get { return learnableMoves2; }
-    }
-
     public Sprite FrontSprite { get => frontSprite; set => frontSprite = value; }
     public Sprite BackSprite { get => backSprite; set => backSprite = value; }
 }
 
 [System.Serializable]
 public class LearnableMove {
-    [SerializeField] MoveBase moveBase;
-    [SerializeField] AbstractMove moveNew;
+    [SerializeReference] IMove move;
+    public IMove Move { get { return move; }}
+
     [SerializeField] int level;
-    public MoveBase MoveBase {
-        get { return moveBase; }
-    }
-    public AbstractMove MoveNew {
-        get { return moveNew; }
-    }
-    public int Level {
-        get { return level; }
-    }
+    public int Level { get { return level; }}
 }
 
 public enum CreatureType {
