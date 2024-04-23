@@ -203,4 +203,14 @@ public class BattleSystem : MonoBehaviour
             StartCoroutine(PerformPlayerMove());
         }
     }
+
+    internal static void DealDamage(BattleUnit user, ElementVector damageAmount, BattleUnit target)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static void Heal(BattleUnit user,ElementVector healAmount, BattleUnit target)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -22,6 +22,7 @@ public class JobBase : ScriptableObject
     [SerializeField] int courage;
 
     [SerializeField] List<LearnableMove> learnableMoves;
+    [SerializeField] List<LearnableMove> learnableMoves2;
 
     public string Description {
         get { return description; }
@@ -51,6 +52,10 @@ public class JobBase : ScriptableObject
         get { return learnableMoves; }
     }
 
+    public List<LearnableMove> LearnableMoves2 {
+        get { return learnableMoves2; }
+    }
+
     public Sprite FrontSprite { get => frontSprite; set => frontSprite = value; }
     public Sprite BackSprite { get => backSprite; set => backSprite = value; }
 }
@@ -58,9 +63,13 @@ public class JobBase : ScriptableObject
 [System.Serializable]
 public class LearnableMove {
     [SerializeField] MoveBase moveBase;
+    [SerializeField] AbstractMove moveNew;
     [SerializeField] int level;
     public MoveBase MoveBase {
         get { return moveBase; }
+    }
+    public AbstractMove MoveNew {
+        get { return moveNew; }
     }
     public int Level {
         get { return level; }
