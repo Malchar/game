@@ -15,6 +15,8 @@ public class ProtoBattler
     [field: SerializeField]
     public int Level { get; set; }
     [field: SerializeField]
+    public string Name { get; set; }
+    [SerializeField]
     public GearSet GearActual {get; set; }
 
     public GearSet GetGear() {

@@ -13,24 +13,10 @@ MonoBehaviour:
   m_Name: First Battle
   m_EditorClassIdentifier: 
   <Battle>k__BackingField:
-    <Monsters>k__BackingField:
-    - <Template>k__BackingField: {fileID: 11400000, guid: 39ea442ac9022134988e94500f14777d, type: 2}
+    <ProtoBattlers>k__BackingField:
+    - <BattlerTemplate>k__BackingField: {fileID: 11400000, guid: 39ea442ac9022134988e94500f14777d, type: 2}
       <Level>k__BackingField: 1
-      <EquipmentSet>k__BackingField:
-        <MainHand>k__BackingField: {fileID: 0}
-        <OffHand>k__BackingField: {fileID: 0}
-        <Armor>k__BackingField: {fileID: 0}
-        <AccessoryA>k__BackingField: {fileID: 0}
-        <AccessoryB>k__BackingField: {fileID: 0}
-      <AI>k__BackingField: {fileID: 0}
-    - <Template>k__BackingField: {fileID: 11400000, guid: 39ea442ac9022134988e94500f14777d, type: 2}
+    - <BattlerTemplate>k__BackingField: {fileID: 11400000, guid: 39ea442ac9022134988e94500f14777d, type: 2}
       <Level>k__BackingField: 2
-      <EquipmentSet>k__BackingField:
-        <MainHand>k__BackingField: {fileID: 0}
-        <OffHand>k__BackingField: {fileID: 0}
-        <Armor>k__BackingField: {fileID: 0}
-        <AccessoryA>k__BackingField: {fileID: 0}
-        <AccessoryB>k__BackingField: {fileID: 0}
-      <AI>k__BackingField: {fileID: 0}
     <Background>k__BackingField: {fileID: 0}
     <MoneyReward>k__BackingField: 100

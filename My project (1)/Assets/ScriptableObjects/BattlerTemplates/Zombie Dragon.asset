@@ -10,21 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f53a2a9e0c5cb4143a3d2b576c4e08c0, type: 3}
-  m_Name: Fire Dragon
+  m_Name: Zombie Dragon
   m_EditorClassIdentifier: 
-  <Core>k__BackingField:
+  <StatsCore>k__BackingField:
     <Agility>k__BackingField: 0
     <Brawn>k__BackingField: 0
     <Courage>k__BackingField: 0
-  <Growth>k__BackingField:
+  <StatsGrowth>k__BackingField:
     <Agility>k__BackingField: 0
     <Brawn>k__BackingField: 0
     <Courage>k__BackingField: 0
   <CreatureTypes>k__BackingField:
   - {fileID: 11400000, guid: b43f23ac202f24945bfc32e2f330c8ea, type: 2}
-  <Resistances>k__BackingField:
+  - {fileID: 11400000, guid: d1de8d896d18f984d9d422caaaffec7a, type: 2}
+  <ResistancesCore>k__BackingField:
+    <Blunt>k__BackingField: 0
+    <Pierce>k__BackingField: 0
+    <Slash>k__BackingField: 0
+    <Tech>k__BackingField: 0
     <Earth>k__BackingField: 0
-    <Fire>k__BackingField: 1
+    <Fire>k__BackingField: 0
     <Wind>k__BackingField: 0
     <Water>k__BackingField: 0
+    <Spirit>k__BackingField: 0
+    <Bio>k__BackingField: 0
+    <Electric>k__BackingField: 0
+    <Psychic>k__BackingField: 0
+    <Ice>k__BackingField: 0
+    <Dark>k__BackingField: 0
   <IdleAnimation>k__BackingField: {fileID: 0}
+  <GearCore>k__BackingField:
+    <MainHand>k__BackingField: {fileID: 0}
+    <OffHand>k__BackingField: {fileID: 0}
+    <BodyArmor>k__BackingField: {fileID: 0}
+    <AccessoryA>k__BackingField: {fileID: 0}
+    <AccessoryB>k__BackingField: {fileID: 0}

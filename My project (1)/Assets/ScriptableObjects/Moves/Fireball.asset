@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   Description: 
-  <NumTargets>k__BackingField: 0
+  <NumTargets>k__BackingField: 1
   <Damage>k__BackingField:
     <PowerSource>k__BackingField: 2
     <ElementVector>k__BackingField:

@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class BattleSystem : MonoBehaviour
 {
+    // this is used to hold a battle for testing
+    public ScriptedBattle testBattle;
+
+    public Battler[] friendlyBattlers;
+    public Battler[] enemyBattlers;
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("battle system starting");
+        // the start method probably doens't need to do anything.
+        // the game controller should call the battleSystem.startBattle(battlers)
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // this should probably delegate to the battlers and the generated effects,
+        // which is what would play their animations.
     }
 
     /* Routine
