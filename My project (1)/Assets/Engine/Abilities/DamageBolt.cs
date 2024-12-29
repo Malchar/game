@@ -4,11 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "new Damage Bolt", menuName = "ScriptableObjects/Moves/DamageBolt", order = 1)]
-public class DamageBolt : Move
+[CreateAssetMenu(fileName = "new Damage Bolt", menuName = "ScriptableObjects/Abilities/DamageBolt", order = 1)]
+public class DamageBolt : Ability
 {
-    [field: SerializeField]
-    public int NumTargets {get; set; }
     [field: SerializeField]
     public PoweredElement Damage {get; set; }
     [field: SerializeField]

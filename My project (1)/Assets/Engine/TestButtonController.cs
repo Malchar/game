@@ -62,8 +62,8 @@ public class TestButtonController : MonoBehaviour
         frostBolt.name = "Frost Bolt";
         DamageBolt lightningBolt = new();
         lightningBolt.name = "Lightning Bolt";
-        Move[] moves = {fireBolt, frostBolt, fireBolt, lightningBolt};
-        scrollViewController.SetContent(moves);
+        Ability[] abilities = {fireBolt, frostBolt, fireBolt, lightningBolt};
+        scrollViewController.SetContent(abilities);
     }
 
     // Update is called once per frame
@@ -89,7 +89,7 @@ public class TestButtonController : MonoBehaviour
     }
 
     public void Confirm() {
-        Debug.Log("move ...");
+        Debug.Log("ability ...");
     }
 
 

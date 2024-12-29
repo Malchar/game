@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEngine;
 
-public class Battler : MonoBehaviour
+public class Battler
 {
     /*
     the battler is a temporary object which only exists during battle.
@@ -12,23 +13,18 @@ public class Battler : MonoBehaviour
     */
     private ProtoBattler ProtoBattler {get; set; }
     public int HP {get; set; }
-    public StatusCondition[] StatusConditions {get; set; }
+    public List<StatusCondition> StatusConditions {get; set; }
     public int Initiative {get; set; }
+    public event Action<int> OnHealthChanged;
+    public bool IsEnemy {get; private set; }
 
-    // graphics
-    public SpriteRenderer SpriteRenderer {get; set; }
-    public Animator Animator {get; set; }
-
-    // Start is called before the first frame update
-    void Start()
+    public Battler(ProtoBattler protoBattler, bool isEnemy)
     {
-        SpriteRenderer = GetComponent<SpriteRenderer>();
-        Animator = GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        ProtoBattler = protoBattler;
+        HP = GetMaxHP();
+        StatusConditions = new();
+        Initiative = 0; // TODO
+        IsEnemy = isEnemy;
     }
 
     public string GetName() {
@@ -36,16 +32,16 @@ public class Battler : MonoBehaviour
     }
 
     // battle utilities
-    public Move[] GetMoves() {
+    public Ability[] GetAbilities() {
         int level = ProtoBattler.Level;
-        LearnableMove[] learnableMoves = ProtoBattler.BattlerTemplate.LearnableMoves;
-        List<Move> moves = new();
-        foreach(LearnableMove learnableMove in learnableMoves) {
-            if (learnableMove.LevelRequirement <= level) {
-                moves.Add(learnableMove.Move);
+        LearnableAbility[] learnableAbilities = ProtoBattler.BattlerTemplate.LearnableAbilities;
+        List<Ability> abilities = new();
+        foreach(LearnableAbility learnableAbility in learnableAbilities) {
+            if (learnableAbility.LevelRequirement <= level) {
+                abilities.Add(learnableAbility.Ability);
             }
         }
-        return moves.ToArray();
+        return abilities.ToArray();
     }
 
     public Stats GetStats() {
@@ -73,9 +69,18 @@ public class Battler : MonoBehaviour
         if (HP == 0) {
             // TODO
         }
+
+        // signal the battlerUI update
+        OnHealthChanged?.Invoke(HP);
     }
 
     public int GetMaxHP() {
         return 25;
+    }
+
+    public bool CanBeTargeted(Ability abilitiy) {
+        // TODO battler determines if they can be targeted by the incoming abilitiy.
+        // example: if knocked out, cannot be targeted by attacks.
+        return true;
     }
 }

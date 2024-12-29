@@ -23,5 +23,5 @@ public class BattlerTemplate : ScriptableObject
     [field: SerializeField]
     public BattleRewards BattleRewards {get; set; }
     [field: SerializeField]
-    public LearnableMove[] LearnableMoves {get; set; }
+    public LearnableAbility[] LearnableAbilities {get; set; }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class LearnableMove
+public class LearnableAbility
 {
-    public Move Move {get; set; }
+    public Ability Ability {get; set; }
     public int LevelRequirement {get; set; }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 /*
 The BattleCanvas will be responsible for handling all of the graphics during battles.
@@ -17,8 +18,9 @@ public class BattleCanvas : MonoBehaviour
     [SerializeField] private TMP_Text battleText;
     [SerializeField] private Transform actionPanel;
     [SerializeField] private GameObject battlerUIPrefab;
-    private List<Battler> playerBattlers;
-    private List<Battler> enemyBattlers;
+
+    // the references to the instantiated battlerUI's
+    private Dictionary<Battler, BattlerUI> battlerToUIMap;
 
     // sample method that would be used by the BattleManager
     public void SetBackground(Sprite image) {
@@ -33,8 +35,6 @@ public class BattleCanvas : MonoBehaviour
     }
 
     private void InitializeBattlers(List<Battler> playerBattlers, List<Battler> enemyBattlers) {
-        this.playerBattlers = playerBattlers;
-        this.enemyBattlers = enemyBattlers;
         SetupBattlersUI(playerBattlers, playerBattlerSlots);
         SetupBattlersUI(enemyBattlers, enemyBattlerSlots);
     }
@@ -43,6 +43,7 @@ public class BattleCanvas : MonoBehaviour
     creates battlerUIprefabs and battlerUI objects for each battler
     */
     private void SetupBattlersUI(List<Battler> battlers, Transform[] battlerSlots) {
+        battlerToUIMap = new Dictionary<Battler, BattlerUI>();
         for (int i = 0; i < battlers.Count; ++i) {
             if (i >= battlerSlots.Length) 
             {
@@ -55,13 +56,8 @@ public class BattleCanvas : MonoBehaviour
             BattlerUI battlerUI = battlerUIObject.GetComponent<BattlerUI>();
             if (battlerUI != null)
             {
-                /*
-                TODO store all battlerUI's in some kind of data structure.
-                they will need to be used for the target selection interface.
-                the battlerUI holds a reference to the battler, so the selection
-                can get the target from there.
-                */
-                battlerUI.Setup(battlers[i]);
+                battlerUI.Bind(battlers[i]);
+                battlerToUIMap.Add(battlers[i], battlerUI);
             }
             else
             {
@@ -80,5 +76,21 @@ public class BattleCanvas : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetShowCursor(Battler battler, bool isSelected)
+    {
+        if (battlerToUIMap.ContainsKey(battler))
+        {
+            BattlerUI battlerUI = battlerToUIMap[battler];
+            battlerUI.ShowCursor(isSelected);
+        }
+    }
+
+    public void ClearAllCursors()
+    {
+        foreach(BattlerUI battlerUI in battlerToUIMap.Values) {
+            battlerUI.ShowCursor(false);
+        }
     }
 }
