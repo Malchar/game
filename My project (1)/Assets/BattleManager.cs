@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -5,15 +6,19 @@ using UnityEngine;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] private BattleCanvas battleCanvas; // Reference to the Canvas
+    private BattleState currentState;
     private List<Battler> playerBattlers;
     private List<Battler> enemyBattlers;
-    private List<Battler> allBattlers;
-    private BattleState currentState;
+    //TODO make some kind of list to track initiative
+    private List<Battler> initiativeList;
     private Battler currentBattler;
+    private int currentAbilityIndex;
     private Ability selectedAbility;
+    private List<Battler> allBattlers; // used for target selection
     private int currentTargetIndex;
     private List<Battler> selectedTargets;
 
+    // handles initializations
     void Start() {
         // retrieve battlers and bind to battlerUI
         List<Battler> playerBattlers = BattleData.Instance.PlayerBattlers;
@@ -28,37 +33,43 @@ public class BattleManager : MonoBehaviour
     void Update() {
         switch (currentState) {
             case BattleState.PlayerAbility:
-                HandlePlayerAbility();
+                UpdatePlayerAbilitySelection();
                 break;
             case BattleState.PlayerTarget:
-                HandlePlayerTarget();
+                UpdatePlayerTargetSelection();
                 break;
             case BattleState.EnemyTurn:
-                HandleEnemyTurn();
+                UpdateEnemyTurn();
                 break;
             case BattleState.ResolveTurn:
-                ResolveTurn();
+                UpdateResolveTurn();
                 break;
             case BattleState.Victory:
-                HandleVictory();
+                UpdateHandleVictory();
                 break;
             case BattleState.Defeat:
-                HandleDefeat();
+                UpdateHandleDefeat();
                 break;
         }
     }
 
+    // handles one-time events at start of battle
     void StartBattle() {
         Debug.Log("Battle has started!");
         StartNextTurn();
     }
 
+    /*
+     starts a new turn of the battle by setting the currentBattler 
+     and then moving to the next stage.
+     */
     void StartNextTurn(){
         CalculateInitiative();
+        currentBattler = initiativeList[0];
         if (currentBattler.IsEnemy) {
             StartEnemyTurn();
         } else {
-            StartAbilitySelection();
+            StartPlayerAbilitySelection();
         }
     }
 
@@ -68,26 +79,19 @@ public class BattleManager : MonoBehaviour
         TODO draw the initiative list in the UI. i don't think we even need to store it
         in the battle manager since it won't actually be used for anything.
         */
-
-        // TODO set the current battler
     }
 
-    public void StartEnemyTurn(){
-        currentState = BattleState.EnemyTurn;
-
-        // TODO
-    }
-
-    public void StartAbilitySelection(){
+    public void StartPlayerAbilitySelection(){
         currentState = BattleState.PlayerAbility;
 
-        currentBattler.GetAbilities();
-        // TODO build this out in the same way as the target selection
+        Ability[] abilities = currentBattler.GetAbilities();
+        currentAbilityIndex = 0;
+        battleCanvas.ShowAbilitySelectorBox(currentBattler);
+        battleCanvas.SetShowAbilityCursor(abilities[currentAbilityIndex], true);
     }
 
-    void HandlePlayerAbility()
+    void UpdatePlayerAbilitySelection()
     {
-        Debug.Log("Player is selecting an ability.");
         // Logic for player to select a target
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -97,6 +101,14 @@ public class BattleManager : MonoBehaviour
         {
             MoveAbilityCursor(-1);
         }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            MoveAbilityCursor(-2);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            MoveAbilityCursor(2);
+        }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
             ConfirmAbility();
@@ -105,29 +117,22 @@ public class BattleManager : MonoBehaviour
 
     private void MoveAbilityCursor(int direction)
     {
-        //TODO retrofit to abilities
-        battleCanvas.SetShowCursor(allBattlers[currentTargetIndex], false);
-        currentTargetIndex = (currentTargetIndex + direction + allBattlers.Count) % allBattlers.Count;
-        battleCanvas.SetShowCursor(allBattlers[currentTargetIndex], true);
+        Ability[] abilities = currentBattler.GetAbilities();
+        battleCanvas.SetShowAbilityCursor(abilities[currentAbilityIndex], false);
+        currentAbilityIndex = (currentAbilityIndex + direction + abilities.Length) % abilities.Length;
+        battleCanvas.SetShowAbilityCursor(abilities[currentAbilityIndex], true);
     }
 
     private void ConfirmAbility()
     {
-        // TODO retrofit to abilities
-        selectedTargets.Add(allBattlers[currentTargetIndex]);
-        Debug.Log($"Target selected: {allBattlers[currentTargetIndex].GetName()}");
-
-        // check if done selecting targets
-        if (selectedAbility.GetNumTargets() == selectedTargets.Count) {
-            // Proceed with ability execution
-            battleCanvas.ClearAllCursors();
-            currentState = BattleState.ResolveTurn;
-        } else {
-            // TODO add some kind of indicator that a target was selected.
-        }
+        Ability[] abilities = currentBattler.GetAbilities();
+        selectedAbility = abilities[currentAbilityIndex];
+        Debug.Log($"Ability selected: {selectedAbility.GetName()}");
+        battleCanvas.HideAbilitySelectorBox();
+        StartPlayerTargetSelection();
     }
 
-    public void StartTargetSelection()
+    public void StartPlayerTargetSelection()
     {
         currentState = BattleState.PlayerTarget;
 
@@ -144,25 +149,29 @@ public class BattleManager : MonoBehaviour
 
         // TODO add handling here for when there are no valid targets
         if (allBattlers.Count == 0) {
-            StartAbilitySelection();
+            StartPlayerAbilitySelection();
             return;
         }
         // Highlight the initial target
         currentTargetIndex = 0;
-        battleCanvas.SetShowCursor(allBattlers[currentTargetIndex], true);
+        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], true);
     }
 
-    void HandlePlayerTarget()
+    void UpdatePlayerTargetSelection()
     {
-        Debug.Log("Player is selecting a target.");
         // Logic for player to select a target
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             MoveTargetCursor(1);
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             MoveTargetCursor(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow)
+         || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            MoveTargetCursor(Math.Min(playerBattlers.Count, enemyBattlers.Count));
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -174,9 +183,9 @@ public class BattleManager : MonoBehaviour
 
     private void MoveTargetCursor(int direction)
     {
-        battleCanvas.SetShowCursor(allBattlers[currentTargetIndex], false);
+        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], false);
         currentTargetIndex = (currentTargetIndex + direction + allBattlers.Count) % allBattlers.Count;
-        battleCanvas.SetShowCursor(allBattlers[currentTargetIndex], true);
+        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], true);
     }
 
     private void ConfirmTarget()
@@ -187,45 +196,52 @@ public class BattleManager : MonoBehaviour
         // check if done selecting targets
         if (selectedAbility.GetNumTargets() == selectedTargets.Count) {
             // Proceed with ability execution
-            battleCanvas.ClearAllCursors();
-            currentState = BattleState.ResolveTurn;
+            battleCanvas.ClearAllTargetCursors();
+            StartResolveTurn();
         } else {
             // TODO add some kind of indicator that a target was selected.
         }
     }
 
-    void HandleEnemyTurn()
-    {
-        Debug.Log("Enemy is taking its turn.");
-        // Logic for enemy's turn
+    // Logic for resolving the effects of abilities
+    void StartResolveTurn(){
         currentState = BattleState.ResolveTurn;
-    }
+        
+        // TODO RESUME HERE
+        selectedAbility.Invoke(currentBattler, selectedTargets.ToArray());
+        // if invoke wants to draw stuff on the battle,
+        // then the battle manager should pass it a reference to the canvas that it can use.
 
-    void ResolveTurn()
-    {
-        Debug.Log("Resolving turn effects.");
-        // Logic for resolving the effects of abilities
+        // maybe invoke needs to be an IEnumerator, or whatever the async thing is.
+        // wait until the Invoke finishes its animations??
+
+        // check if either side is defeated
         // Transition to Victory, Defeat, or next turn
+        StartNextTurn();
     }
 
-    // a sample method. note that battler.TakeDamage signals the battlerUI update.
-    public void ApplyDamageToEnemyBattler(int battlerIndex, int damage)
+    void UpdateResolveTurn()
     {
-        if (battlerIndex < 0 || battlerIndex >= enemyBattlers.Count) return;
-
-        Battler battler = enemyBattlers[battlerIndex];
-        battler.TakeDamage(damage);
+        // update method during resolve turn
     }
 
-    void HandleVictory()
+    public void StartEnemyTurn(){
+        currentState = BattleState.EnemyTurn;
+
+        // TODO
+    }
+    void UpdateEnemyTurn()
     {
-        Debug.Log("Player wins!");
+        // update method during resolve turn
+    }
+
+    void UpdateHandleVictory()
+    {
         // Handle victory logic
     }
 
-    void HandleDefeat()
+    void UpdateHandleDefeat()
     {
-        Debug.Log("Player loses!");
         // Handle defeat logic
     }
 

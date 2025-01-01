@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Linq;
 
 /*
 The BattleCanvas will be responsible for handling all of the graphics during battles.
@@ -11,16 +12,20 @@ It is driven by the BattleManager.
 */
 public class BattleCanvas : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Battlers")]
     [SerializeField] private Transform[] playerBattlerSlots; // Preset Transforms for player battlers
     [SerializeField] private Transform[] enemyBattlerSlots;  // Preset Transforms for enemy battlers
-    [SerializeField] private Image background;
-    [SerializeField] private TMP_Text battleText;
-    [SerializeField] private Transform actionPanel;
     [SerializeField] private GameObject battlerUIPrefab;
+    [Header("Ability Panel")]
+    [SerializeField] private GameObject abilityPanel;
+    [SerializeField] private MenuAbility[] menuAbilities;
+    [Header("Misc.")]
+    [SerializeField] private TMP_Text battleText;
+    [SerializeField] private Image background;
 
     // the references to the instantiated battlerUI's
     private Dictionary<Battler, BattlerUI> battlerToUIMap;
+    private Dictionary<Ability, MenuAbility> abilityToUIMap;
 
     // sample method that would be used by the BattleManager
     public void SetBackground(Sprite image) {
@@ -78,16 +83,50 @@ public class BattleCanvas : MonoBehaviour
         
     }
 
-    public void SetShowCursor(Battler battler, bool isSelected)
+    public void ShowAbilitySelectorBox(Battler battler) {
+        abilityToUIMap = new();
+        Ability[] abilities = battler.GetAbilities();
+
+        for(int i = 0; i < menuAbilities.Length; ++i) {
+            MenuAbility menuAbility = menuAbilities[i];
+            menuAbility.SetHighlighted(false);
+
+            if (i < abilities.Length) {
+                Ability ability = abilities[i];
+                menuAbility.SetText(ability.GetName());
+                abilityToUIMap.Add(ability, menuAbility);
+            } else {
+                menuAbility.SetText("");
+            }
+        }
+        abilityPanel.SetActive(true);
+    }
+
+    public void HideAbilitySelectorBox() {
+        abilityPanel.SetActive(false);
+    }
+
+    public void SetShowAbilityCursor(Ability ability, bool isSelected) {
+        if (abilityToUIMap.ContainsKey(ability)) {
+            MenuAbility menuAbility = abilityToUIMap[ability];
+            menuAbility.SetHighlighted(isSelected);
+        } else {
+            Debug.LogError("set show ability cursor on ability which is not in map. " + ability.GetName());
+        }
+    }
+
+    public void SetShowTargetCursor(Battler battler, bool isSelected)
     {
         if (battlerToUIMap.ContainsKey(battler))
         {
             BattlerUI battlerUI = battlerToUIMap[battler];
             battlerUI.ShowCursor(isSelected);
+        } else {
+            Debug.LogError("set show target cursor on battler which is not in map. " + battler.GetName());
         }
     }
 
-    public void ClearAllCursors()
+    public void ClearAllTargetCursors()
     {
         foreach(BattlerUI battlerUI in battlerToUIMap.Values) {
             battlerUI.ShowCursor(false);
