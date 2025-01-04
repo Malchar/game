@@ -14,6 +14,9 @@ public class BattlerUI : MonoBehaviour
     // graphics
     [SerializeField] public SpriteRenderer SpriteRenderer {get; set; }
     [SerializeField] public Animator Animator {get; set; }
+
+    // hold ref to battler so we can unsubscribe from events on destroy
+    private Battler battler;
     
 
     public void ShowCursor(bool show)
@@ -23,6 +26,7 @@ public class BattlerUI : MonoBehaviour
     
     public void Bind(Battler battler)
     {
+        this.battler = battler;
         // subscribe to events
         battler.OnHealthChanged += UpdateHealthBar;
 
@@ -48,5 +52,11 @@ public class BattlerUI : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnDestroy()
+    {
+        // unsubscribe from all events
+        battler.OnHealthChanged -= UpdateHealthBar;
     }
 }

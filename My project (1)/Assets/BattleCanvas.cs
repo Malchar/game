@@ -19,6 +19,8 @@ public class BattleCanvas : MonoBehaviour
     [Header("Ability Panel")]
     [SerializeField] private GameObject abilityPanel;
     [SerializeField] private MenuAbility[] menuAbilities;
+    [Header("Turn Icons")]
+    [SerializeField] private TurnIcon[] turnIcons;
     [Header("Misc.")]
     [SerializeField] private TMP_Text battleText;
     [SerializeField] private Image background;
@@ -26,6 +28,10 @@ public class BattleCanvas : MonoBehaviour
     // the references to the instantiated battlerUI's
     private Dictionary<Battler, BattlerUI> battlerToUIMap;
     private Dictionary<Ability, MenuAbility> abilityToUIMap;
+
+    public int GetNumTurnIcons() {
+        return turnIcons.Length;
+    }
 
     // sample method that would be used by the BattleManager
     public void SetBackground(Sprite image) {
@@ -71,16 +77,10 @@ public class BattleCanvas : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void UpdateTurnIcons(List<Battler> futureBattlers) {
+        for(int i = 0; i < futureBattlers.Count; ++i) {
+            turnIcons[i].Setup(futureBattlers[i].GetIcon());
+        }
     }
 
     public void ShowAbilitySelectorBox(Battler battler) {

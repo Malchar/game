@@ -9,12 +9,12 @@ public class BattleManager : MonoBehaviour
     private BattleState currentState;
     private List<Battler> playerBattlers;
     private List<Battler> enemyBattlers;
-    //TODO make some kind of list to track initiative
-    private List<Battler> initiativeList;
+    private TurnQueue turnQueue; // tracks battler initiative
     private Battler currentBattler;
     private int currentAbilityIndex;
     private Ability selectedAbility;
     private List<Battler> allBattlers; // used for target selection
+    private List<Battler> selectableBattlers;
     private int currentTargetIndex;
     private List<Battler> selectedTargets;
 
@@ -24,6 +24,20 @@ public class BattleManager : MonoBehaviour
         List<Battler> playerBattlers = BattleData.Instance.PlayerBattlers;
         List<Battler> enemyBattlers = BattleData.Instance.EnemyBattlers;
         battleCanvas.Initialize(playerBattlers, enemyBattlers);
+
+        // set up reference list of all battlers. used for target selection and turn queue
+        allBattlers = new List<Battler>(playerBattlers);
+        allBattlers.AddRange(enemyBattlers);
+
+        // subscribe to events
+        foreach (Battler battler in allBattlers)
+        {
+            battler.OnAgilityChanged += OnBattlerAgilityChanged;
+        }
+
+        // set up turn queue
+        // TODO initialize each battler's Initiative value before adding them to the queue
+        turnQueue.Initialize(allBattlers);
 
         // set battle state
         currentState = BattleState.Start;
@@ -64,8 +78,8 @@ public class BattleManager : MonoBehaviour
      and then moving to the next stage.
      */
     void StartNextTurn(){
-        CalculateInitiative();
-        currentBattler = initiativeList[0];
+        currentBattler = turnQueue.ExtractNextBattler();
+        UpdateTurnQueueUI();
         if (currentBattler.IsEnemy) {
             StartEnemyTurn();
         } else {
@@ -73,12 +87,15 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    // sets current battler and the initiative list UI
-    private void CalculateInitiative(){
-        /*
-        TODO draw the initiative list in the UI. i don't think we even need to store it
-        in the battle manager since it won't actually be used for anything.
-        */
+    // updates the turn queue and the battle canvas display
+    private void UpdateTurnQueueUI(){
+        List<Battler> futureBattlers = turnQueue.PeekUpcomingBattlers(battleCanvas.GetNumTurnIcons());
+        battleCanvas.UpdateTurnIcons(futureBattlers);
+    }
+
+    public void OnBattlerAgilityChanged(Battler battler)
+    {
+        UpdateTurnQueueUI();
     }
 
     public void StartPlayerAbilitySelection(){
@@ -142,19 +159,20 @@ public class BattleManager : MonoBehaviour
         // create list of eligible targets
         // TODO build the list in a different order depending on the selected ability
         // TODO change the targetting mode entirely depending on the selected ability
-        allBattlers = new List<Battler>(playerBattlers);
-        allBattlers.AddRange(enemyBattlers);
+        selectableBattlers = new List<Battler>(allBattlers);
+        
         // remove battlers that cannot be targetted by the selected ability
-        allBattlers = allBattlers.Where(battler => battler.CanBeTargeted(selectedAbility)).ToList();
+        selectableBattlers = selectableBattlers.Where(battler => battler.CanBeTargeted(selectedAbility)).ToList();
 
         // TODO add handling here for when there are no valid targets
-        if (allBattlers.Count == 0) {
+        if (selectableBattlers.Count == 0) {
+            Debug.Log("no valid targets for that ability");
             StartPlayerAbilitySelection();
             return;
         }
         // Highlight the initial target
         currentTargetIndex = 0;
-        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], true);
+        battleCanvas.SetShowTargetCursor(selectableBattlers[currentTargetIndex], true);
     }
 
     void UpdatePlayerTargetSelection()
@@ -183,15 +201,16 @@ public class BattleManager : MonoBehaviour
 
     private void MoveTargetCursor(int direction)
     {
-        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], false);
-        currentTargetIndex = (currentTargetIndex + direction + allBattlers.Count) % allBattlers.Count;
-        battleCanvas.SetShowTargetCursor(allBattlers[currentTargetIndex], true);
+        battleCanvas.SetShowTargetCursor(selectableBattlers[currentTargetIndex], false);
+        currentTargetIndex = (currentTargetIndex + direction + selectableBattlers.Count) % selectableBattlers.Count;
+        battleCanvas.SetShowTargetCursor(selectableBattlers[currentTargetIndex], true);
     }
 
     private void ConfirmTarget()
     {
-        selectedTargets.Add(allBattlers[currentTargetIndex]);
-        Debug.Log($"Target selected: {allBattlers[currentTargetIndex].GetName()}");
+        // TODO also remove the target from the list of selectable, so it cannot be picked again
+        selectedTargets.Add(selectableBattlers[currentTargetIndex]);
+        Debug.Log($"Target selected: {selectableBattlers[currentTargetIndex].GetName()}");
 
         // check if done selecting targets
         if (selectedAbility.GetNumTargets() == selectedTargets.Count) {
@@ -217,6 +236,7 @@ public class BattleManager : MonoBehaviour
 
         // check if either side is defeated
         // Transition to Victory, Defeat, or next turn
+        Debug.Log("current turn resolved, starting next turn..");
         StartNextTurn();
     }
 
@@ -227,9 +247,34 @@ public class BattleManager : MonoBehaviour
 
     public void StartEnemyTurn(){
         currentState = BattleState.EnemyTurn;
+        List<Ability> abilities = currentBattler.GetAbilities().ToList();
+        while (abilities.Count > 0) {
+            // determine ability
+            selectedAbility = abilities[UnityEngine.Random.Range(0, abilities.Count)];
+            abilities.Remove(selectedAbility);
 
-        // TODO
+            // determine targets
+            selectedTargets = new();
+            selectableBattlers = new List<Battler>(playerBattlers); // assume ability is hostile
+            selectableBattlers = selectableBattlers.Where(battler => battler.CanBeTargeted(selectedAbility)).ToList();
+
+            // pick a different ability if there aren't enough targets
+            if (selectableBattlers.Count < selectedAbility.GetNumTargets()) {
+                continue;
+            } else {
+                while (selectedTargets.Count < selectedAbility.GetNumTargets()) {
+                    Battler selectedBattler = selectableBattlers[UnityEngine.Random.Range(0, selectableBattlers.Count)];
+                    selectableBattlers.Remove(selectedBattler);
+                    selectedTargets.Add(selectedBattler);
+                }
+                StartResolveTurn();
+                return;
+            }
+        }
+        Debug.Log("enemy has no usable moves, starting next turn..");
+        StartNextTurn();
     }
+
     void UpdateEnemyTurn()
     {
         // update method during resolve turn
@@ -247,6 +292,12 @@ public class BattleManager : MonoBehaviour
 
     public void EndBattle()
     {
+        // unsubscribe from events
+        foreach (Battler battler in allBattlers)
+        {
+            battler.OnAgilityChanged -= OnBattlerAgilityChanged;
+        }
+
         // Notify GameManager that the battle is over
         GameManager.Instance.EndBattle();
     }

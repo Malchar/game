@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 public class BattlerTemplate : ScriptableObject
 {
     [field: SerializeField]
+    public Sprite Icon { get; set; }
+    [field: SerializeField]
     public Stats StatsCore { get; set; }
     [field: SerializeField]
     public Stats StatsGrowth { get; set; }

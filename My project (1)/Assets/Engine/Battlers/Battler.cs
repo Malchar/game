@@ -23,7 +23,7 @@ public class Battler
         ProtoBattler = protoBattler;
         HP = GetMaxHP();
         StatusConditions = new();
-        Initiative = 0; // TODO
+        Initiative = 0; // driven by the BattleManager's TurnQueue
         IsEnemy = isEnemy;
     }
 
@@ -82,5 +82,31 @@ public class Battler
         // TODO battler determines if they can be targeted by the incoming abilitiy.
         // example: if knocked out, cannot be targeted by attacks.
         return true;
+    }
+
+    // increment initiative and return the amount of the increase.
+    internal int IncreaseInitiative()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Sprite GetIcon() {
+        return ProtoBattler.BattlerTemplate.Icon;
+    }
+
+    // this passes a ref to the battler, but that ref probably isn't used
+    public event Action<Battler> OnAgilityChanged;
+    // TODO placeholder variable speed
+    int speed;
+    public void SetAgility(int value) {
+        if (speed != value)
+        {
+            // TODO in order to get the battler's agility, need to store a value in the battler class.
+            // possibly initialize it at start and then allow changes via public access?
+            // how would it interact with upgrades from gear?
+            // idea: getAgility returns baseAgility + gearAgility + tempAgility
+            speed = value;
+            OnAgilityChanged?.Invoke(this); // Trigger the event
+        }
     }
 }
