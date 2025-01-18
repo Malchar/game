@@ -22,9 +22,30 @@ public class Stats
         this.Courage = courage;
     }
 
-    public static Stats Add(Stats statsX, Stats statsY)
+    public static Stats Add(params Stats[] statsArray)
     {
-        return new Stats(statsX.Agility + statsY.Agility, statsX.Brawn + statsY.Brawn, statsX.Courage + statsY.Courage);
+        int totalAgility = 0;
+        int totalBrawn = 0;
+        int totalCourage = 0;
+        foreach (Stats stats in statsArray) {
+            totalAgility += stats.Agility;
+            totalBrawn += stats.Brawn;
+            totalCourage += stats.Courage;
+        }
+        return new Stats(totalAgility, totalBrawn, totalCourage);
+    }
+
+    public Stats Floor() {
+        if (this.Agility < 0) {
+            this.Agility = 0;
+        }
+        if (this.Brawn < 0) {
+            this.Brawn = 0;
+        }
+        if (this.Courage < 0) {
+            this.Courage = 0;
+        }
+        return this;
     }
 
     public static Stats Scale(int scaler, Stats stats) {

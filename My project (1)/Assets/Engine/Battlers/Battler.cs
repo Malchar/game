@@ -17,6 +17,18 @@ public class Battler
     public int Initiative {get; set; }
     public event Action<int> OnHealthChanged;
     public bool IsEnemy {get; private set; }
+    // these are temporary stat changes during battle
+    public Stats TempStats { 
+        private get { return TempStats; } 
+        set {
+            // check for changes
+            if (TempStats.Agility - value.Agility != 0) {
+                OnAgilityChanged?.Invoke(this); // Trigger the event
+            }
+            // set value
+            TempStats = value;
+        }
+    }
 
     public Battler(ProtoBattler protoBattler, bool isEnemy)
     {
@@ -25,6 +37,7 @@ public class Battler
         StatusConditions = new();
         Initiative = 0; // driven by the BattleManager's TurnQueue
         IsEnemy = isEnemy;
+        TempStats = new(0, 0, 0);
     }
 
     public string GetName() {
@@ -44,15 +57,24 @@ public class Battler
         return abilities.ToArray();
     }
 
+    // the final stat values will never be negative
     public Stats GetStats() {
         Stats core = ProtoBattler.BattlerTemplate.StatsCore;
         int level = ProtoBattler.Level;
         Stats growth = ProtoBattler.BattlerTemplate.StatsGrowth;
-        return Stats.LevelledStats(core, level, growth);
+        Stats baseStats = Stats.LevelledStats(core, level, growth);
+
+        Stats gearStats = new(0, 0, 0); // TODO placeholder
+
+        // floor function makes each stat non-negative
+        return Stats.Add(baseStats, gearStats, TempStats).Floor();
     }
 
     public ElementVector GetArmor() {
         // TODO: this does not account for temp changes during battle (riposte)
+        // TODO need to refactor armor and resistances in the same way as stats
+        // use a tempValue which can be modified in battle, and then the getter
+        // should just return the total sum including temp, base, and gear.
         return ProtoBattler.GetGear().GetTotalArmor();
     }
 
@@ -87,7 +109,9 @@ public class Battler
     // increment initiative and return the amount of the increase.
     internal int IncreaseInitiative()
     {
-        throw new NotImplementedException();
+        int amount = GetStats().Agility;
+        Initiative += amount;
+        return amount;
     }
 
     public Sprite GetIcon() {
@@ -96,17 +120,5 @@ public class Battler
 
     // this passes a ref to the battler, but that ref probably isn't used
     public event Action<Battler> OnAgilityChanged;
-    // TODO placeholder variable speed
-    int speed;
-    public void SetAgility(int value) {
-        if (speed != value)
-        {
-            // TODO in order to get the battler's agility, need to store a value in the battler class.
-            // possibly initialize it at start and then allow changes via public access?
-            // how would it interact with upgrades from gear?
-            // idea: getAgility returns baseAgility + gearAgility + tempAgility
-            speed = value;
-            OnAgilityChanged?.Invoke(this); // Trigger the event
-        }
-    }
+
 }

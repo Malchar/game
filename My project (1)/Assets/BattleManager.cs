@@ -36,7 +36,8 @@ public class BattleManager : MonoBehaviour
         }
 
         // set up turn queue
-        // TODO initialize each battler's Initiative value before adding them to the queue
+        // if we want to have surprise rounds, then the battle manager should
+        // initialize each battler's Initiative value before passing to the turnQueue.
         turnQueue.Initialize(allBattlers);
 
         // set battle state
@@ -164,15 +165,15 @@ public class BattleManager : MonoBehaviour
         // remove battlers that cannot be targetted by the selected ability
         selectableBattlers = selectableBattlers.Where(battler => battler.CanBeTargeted(selectedAbility)).ToList();
 
-        // TODO add handling here for when there are no valid targets
+        //handling for when there are no valid targets
         if (selectableBattlers.Count == 0) {
             Debug.Log("no valid targets for that ability");
             StartPlayerAbilitySelection();
-            return;
+        } else {
+            // Highlight the initial target
+            currentTargetIndex = 0;
+            battleCanvas.SetShowTargetCursor(selectableBattlers[currentTargetIndex], true);
         }
-        // Highlight the initial target
-        currentTargetIndex = 0;
-        battleCanvas.SetShowTargetCursor(selectableBattlers[currentTargetIndex], true);
     }
 
     void UpdatePlayerTargetSelection()
@@ -243,6 +244,7 @@ public class BattleManager : MonoBehaviour
     void UpdateResolveTurn()
     {
         // update method during resolve turn
+        // this will run each frame
     }
 
     public void StartEnemyTurn(){
@@ -278,16 +280,19 @@ public class BattleManager : MonoBehaviour
     void UpdateEnemyTurn()
     {
         // update method during resolve turn
+        // this will run each frame. can probably re-use UpdateResolveTurn
     }
 
     void UpdateHandleVictory()
     {
         // Handle victory logic
+        // runs each frame
     }
 
     void UpdateHandleDefeat()
     {
         // Handle defeat logic
+        // runs each frame
     }
 
     public void EndBattle()
